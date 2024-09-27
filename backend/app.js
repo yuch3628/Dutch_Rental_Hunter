@@ -7,6 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var houseScraping = require('./service/housescraping');
+var dotenv = require('dotenv');
+dotenv.config();
+console.log(`Your port is ${process.env.POSTGRES_USERNAME}`); // 8626
 
 var app = express();
 var cors = require('cors');

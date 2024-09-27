@@ -1,11 +1,9 @@
-module.exports = {
-    getHouseScraping : () => {
-        let {PythonShell} = require('python-shell');
-        PythonShell.run('./service/rentalscraper.py', null).then(messages=>{
-            console.log('result:%j',messages);
-        });
-    }
-} 
 
+function scheduleHouseScraping(crontab) {
+    let {PythonShell} = require('python-shell');
+    PythonShell.run('./service/rentalscraper.py', null).then(messages=>{
+        let dataList = JSON.parse(messages[0]); 
+    });
+}
 
-// module.exports = getHouseScraping;
+module.exports = {scheduleHouseScraping};

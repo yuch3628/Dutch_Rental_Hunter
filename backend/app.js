@@ -7,6 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var houseScraping = require('./service/housescraping');
+var dotenv = require('dotenv');
+dotenv.config();
+console.log(`Your port is ${process.env.POSTGRES_USERNAME}`); // 8626
 
 var app = express();
 var cors = require('cors');
@@ -29,7 +32,7 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-houseScraping.getHouseScraping();
+houseScraping.scheduleHouseScraping('');
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

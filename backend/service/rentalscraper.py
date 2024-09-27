@@ -37,4 +37,6 @@ for item in houseData['itemListElement']:
 
     thisdict = dict(name = houseDetail['name'], city = houseDetail['address']['addressLocality'], region = houseDetail['address']['addressRegion'], postcode = postCode, price = houseDetail['offers']['price'], imgUrl = img)
     house.append(thisdict)
-print(house)
+
+json_object = json.dumps(house)
+print(json_object)

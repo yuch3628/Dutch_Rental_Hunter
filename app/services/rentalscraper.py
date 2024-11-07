@@ -17,27 +17,31 @@ if html.status_code ==200:
 else:
     print('Connection failed!')
 
-houseData = json.loads(soup.find('script', type='application/ld+json').text)
-house = []
-for item in houseData['itemListElement']:
-    houseUrl = item['url']
-    houseHtml = requests.get(houseUrl, headers= headers)
-    if houseHtml.status_code ==200:
-        soup = BeautifulSoup(houseHtml.content, 'html.parser')
-    else:
-        print('Connection failed!')
-    
-    houseDetail = json.loads(soup.find('script', type='application/ld+json').text)
-    last = houseDetail['description'].find(houseDetail['name'])+len(houseDetail['name']) + 1 
-    postCode = houseDetail['description'][last:last+7]
-    
-    img = []
-    for photo in houseDetail['photo'] :
-        img.append(photo['contentUrl'])
+if soup.find('script', type='application/ld+json') != None:
 
-    thisdict = dict(name = houseDetail['name'], city = houseDetail['address']['addressLocality'], region = houseDetail['address']['addressRegion'], postcode = postCode, price = houseDetail['offers']['price'], imgUrl = img)
-    house.append(thisdict)
+    houseData = json.loads(soup.find('script', type='application/ld+json').text)
+    house = []
+    for item in houseData['itemListElement']:
+        houseUrl = item['url']
+        houseHtml = requests.get(houseUrl, headers= headers)
+        if houseHtml.status_code ==200:
+            soup = BeautifulSoup(houseHtml.content, 'html.parser')
+        else:
+            print('Connection failed!')
+        
+        houseDetail = json.loads(soup.find('script', type='application/ld+json').text)
+        last = houseDetail['description'].find(houseDetail['name'])+len(houseDetail['name']) + 1 
+        postCode = houseDetail['description'][last:last+7]
+        houseUrl = houseDetail['id']
 
-json_object = json.dumps(house)
+        img = []
+        for photo in houseDetail['photo'] :
+            img.append(photo['contentUrl'])
 
-print(json_object)
+        thisdict = dict(name = houseDetail['name'], city = houseDetail['address']['addressLocality'], region = houseDetail['address']['addressRegion'], postcode = postCode, price = houseDetail['offers']['price'], imgUrl = img, url = houseUrl)
+        house.append(thisdict)
+    json_object = json.dumps(house)
+    print(json_object)
+else:
+    json_object = {}
+    print(json_object)

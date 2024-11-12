@@ -40,10 +40,10 @@ async function scheduleHouseScraping() {
     }
     // await db.end();
     
-    if (existedRent.length) {
-        console.log('Already have in DB:');
-        console.log(existedRent);
-    } 
+    // if (existedRent.length) {
+    //     console.log('Already have in DB:');
+    //     console.log(existedRent);
+    // } 
 
     if (dbError.length) {
         console.log('Error:');

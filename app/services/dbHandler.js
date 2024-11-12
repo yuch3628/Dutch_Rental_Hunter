@@ -36,3 +36,8 @@ export async function getHouseInfoByDate(date) {
     let house = await db.query("SELECT * FROM house WHERE posting_date = ($1);",[date]);
     return house.rows;
 }
+
+export async function getHouseInfoByDateRange(date) {
+    let house = await db.query("SELECT * FROM house WHERE posting_date >= ($1)",[date]);
+    return house.rows;
+}

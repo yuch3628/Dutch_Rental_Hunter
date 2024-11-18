@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import scheduleHouseScraping from "./services/housescraping.js"
-import {db, getHouseInfoByDate,getHouseInfoByDateRange} from "./services/dbHandler.js"
+import {db, getHouseInfoByDate} from "./services/dbHandler.js"
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -66,7 +66,7 @@ app.get("/house/date/:id", async (req,res) => {
             prevDate = date;
     }
 
-    let house = await getHouseInfoByDateRange(prevDate);
+    let house = await getHouseInfoByDate(prevDate);
     res.send(house);
 });
 app.listen(process.env.PORT, ()=>{

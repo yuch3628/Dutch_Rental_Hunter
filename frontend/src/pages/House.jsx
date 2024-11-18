@@ -25,9 +25,10 @@ const House = () => {
     });
     
     const houseComp = () => {
-        if (houseData.length) {
+        if (houseData.length !== 0) {
+            // console.log(houseData.length);
             return (houseData.map(data =>
-                <Card data={data}></Card>));
+                <Card data={data} key={data.id}></Card>));
         } else {
             return (<div style={noInfoStyle}><h1 style={{margin: '0px', color:'#a7a8aa'}}>House is not avilable today!</h1></div>);
         }

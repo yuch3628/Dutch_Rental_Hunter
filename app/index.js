@@ -32,7 +32,6 @@ app.get("/house/yesterday", async (req,res) => {
 
 app.get("/house/date/:id", async (req,res) => {
     var dateType = req.params.id;
-    console.log(dateType);
 
     const date = new Date();
     let prevDate = new Date(date);

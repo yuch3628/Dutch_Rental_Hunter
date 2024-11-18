@@ -34,6 +34,5 @@ export async function getExistHouse(house){
 
 export async function getHouseInfoByDate(date) {
     let house = await db.query("SELECT house.*, array_remove(array_agg(houseimage.imgurl), NULL) AS imgurls FROM house LEFT JOIN houseimage ON house.address = houseimage.address WHERE house.posting_date >= ($1) GROUP BY house.id;",[date]);
-    console.log(house.rows)
     return house.rows;
 }

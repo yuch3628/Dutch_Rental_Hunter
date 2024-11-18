@@ -6,9 +6,30 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid2';
 import { createTheme, responsiveFontSizes, ThemeProvider} from '@mui/material/styles';
+import Carousel from 'react-material-ui-carousel';
 
 let theme = createTheme();
 theme = responsiveFontSizes(theme);
+
+
+const imgUrlComp= (data) => {
+    if (data.imgurls.length === null){
+        return (<div></div>);
+    } else {
+        return (
+        <Carousel>{
+            data.imgurls.map(url =>
+            <CardMedia component="img"
+            sx={{width: '100%', borderRadius: 10, flexGrow: "1"}}
+            image={url}
+            a
+            lt="house picture"/>)}</Carousel>);
+    }
+    
+
+};
+    
+
 
 export default function OutlinedCard({data}) {
   return (
@@ -53,12 +74,7 @@ export default function OutlinedCard({data}) {
                         </Box>
                     </Grid>
                     <Grid size ={{xs:12, md:5}} style={{ mx:"10%" }}>
-                        <CardMedia
-                            component="img"
-                            sx={{width: '100%', borderRadius: 10, flexGrow: "1"}}
-                            image="https://cloud.funda.nl/valentina_media/199/417/230_1440x960.jpg"
-                            a
-                            lt="house picture"/>
+                    {imgUrlComp(data)}
                     </Grid>
                 </Grid>
             </CardContent>

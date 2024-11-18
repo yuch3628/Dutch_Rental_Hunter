@@ -24,7 +24,7 @@ const History = () => {
             <NavBar></NavBar>
             <ComboBox getLabelId={(value) => houseInfo(value.id)}/>
             {houseData.map(data =>
-                <Card data={data}></Card>
+                <Card data={data} key={data.id}></Card>
             )}
         </div>
     );

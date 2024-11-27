@@ -9,6 +9,8 @@ This is a full-stack web application built with React, Node.js, Express, and Pos
 <li>React</li>
 <li>Node</li>
 <li>Material UI</li>
+<li>Python</li>
+<li>BeautifulSoup</li>
 
 <h2>Features</h2>
 <li>View rental apartment which publish on today.</li>

@@ -9,10 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import HouseIcon from '@mui/icons-material/House';
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { ThemeProvider } from '@emotion/react';
 
-const pages = ['Today', 'History', 'FAQ'];
+const pages = ['Today', 'History'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -26,8 +24,9 @@ function NavBar() {
     setAnchorElNav(null);
   };
 
+
   return (
-    <AppBar position="static" style={{ backgroundColor: '#dacff2'}} >
+    <AppBar position="sticky" style={{ backgroundColor: 'white', color :'black', marginTop: "10px",}} >
       <Container maxWidth="false">
         <Toolbar disableGutters>
           <HouseIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -82,9 +81,6 @@ function NavBar() {
               <MenuItem key={pages[1]} component="a" href='/history' onClick={handleCloseNavMenu}>
                 <Typography sx={{ textAlign: 'center' }}>{pages[1]}</Typography>
               </MenuItem>
-              <MenuItem key={pages[2]} component="a" href='/faq' onClick={handleCloseNavMenu}>
-                <Typography sx={{ textAlign: 'center' }}>{pages[2]}</Typography>
-              </MenuItem>
             </Menu>
           </Box>
           <HouseIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -111,7 +107,7 @@ function NavBar() {
               key={pages[0]}
               href='/today'
               onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
+              sx={{ my: 2, color: 'black', display: 'block' }}
             >
               {pages[0]}
             </Button>
@@ -119,17 +115,9 @@ function NavBar() {
               key={pages[1]}
               href='/history'
               onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
+              sx={{ my: 2, color: 'black', display: 'block' }}
             >
               {pages[1]}
-            </Button>
-            <Button
-              key={pages[2]}
-              href='/faq'
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              {pages[2]}
             </Button>
           </Box>
         </Toolbar>

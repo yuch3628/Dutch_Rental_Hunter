@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 import {
@@ -9,7 +8,6 @@ import {
 import Home from './pages/Home.jsx';
 import House from './pages/House.jsx';
 import History from './pages/History.jsx';
-import Faq from './pages/Faq.jsx';
 import {
   createTheme,
   responsiveFontSizes,
@@ -28,7 +26,6 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route exact path="/today" element={<House />} />
           <Route exact path="/history" element={<History />} />
-          <Route exact path="/faq" element={<Faq />} />
           </Routes>
         </div>
       </Router>

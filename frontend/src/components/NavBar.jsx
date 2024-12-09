@@ -26,7 +26,7 @@ function NavBar() {
 
 
   return (
-    <AppBar position="sticky" style={{ backgroundColor: 'white', color :'black', marginTop: "10px",}} >
+    <AppBar position="sticky" style={{ backgroundColor: 'white', color :'black', padding: '10px'}} >
       <Container maxWidth="false">
         <Toolbar disableGutters>
           <HouseIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

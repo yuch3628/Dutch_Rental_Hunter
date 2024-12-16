@@ -21,6 +21,7 @@ if soup.find('script', type='application/ld+json') != None:
 
     houseData = json.loads(soup.find('script', type='application/ld+json').text)
     house = []
+
     for item in houseData['itemListElement']:
         houseUrl = item['url']
         houseHtml = requests.get(houseUrl, headers= headers)
@@ -30,15 +31,22 @@ if soup.find('script', type='application/ld+json') != None:
             print('Connection failed!')
         
         houseDetail = json.loads(soup.find('script', type='application/ld+json').text)
+
         last = houseDetail['description'].find(houseDetail['name'])+len(houseDetail['name']) + 1 
         postCode = houseDetail['description'][last:last+7]
         houseUrl = houseDetail['id']
-
+        
+        
         img = []
         for photo in houseDetail['photo'] :
             img.append(photo['contentUrl'])
-
-        thisdict = dict(name = houseDetail['name'], city = houseDetail['address']['addressLocality'], region = houseDetail['address']['addressRegion'], postcode = postCode, price = houseDetail['offers']['price'], imgUrl = img, url = houseUrl)
+        
+        if 'price' in houseDetail['offers']:
+            houseprice = houseDetail['offers']['price']
+        else :
+            houseprice = 0
+        
+        thisdict = dict(name = houseDetail['name'], city = houseDetail['address']['addressLocality'], region = houseDetail['address']['addressRegion'], postcode = postCode, price = houseprice, imgUrl = img, url = houseUrl)
         house.append(thisdict)
     json_object = json.dumps(house)
     print(json_object)

@@ -13,8 +13,10 @@ const Home = () => {
 
     const dashboardInfo = () => {
         // setIsLoading(true);
-        axios.get('http://localhost:8800/dashboard').then((res) => {
+        axios.get('http://localhost:8800/dashboard')
+        .then((res) => {
             setDashboardData(res.data);
+            console.log(res.data);
         });
     }
     useEffect(() => {
@@ -37,12 +39,12 @@ const Home = () => {
                     <Grid item size={{ xs: 12, sm: 6, lg: 3 }}>
                         <AnaylzeCard />
                     </Grid>
-                    {/* <Grid item size={{ xs: 12, lg: 6 }}>
+                    <Grid item size={{ xs: 12, lg: 6 }}>
                         <AnaylzeGraph data={dashboardData} />
                     </Grid>
                     <Grid item size={{ xs: 12, lg: 6 }}>
                         <AnaylzeGraph data={dashboardData} />
-                    </Grid> */}
+                    </Grid>
                 </Grid>);
         } else {
             return (

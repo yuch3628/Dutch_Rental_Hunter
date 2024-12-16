@@ -20,6 +20,7 @@ const House = () => {
     const houseInfo = () => {
         axios.get('http://localhost:8800/house/today').then((res) => {
             setHouseData(res.data);
+            console.log(res.data);
         })
     }
 

@@ -28,7 +28,7 @@ const History = () => {
     }
     useEffect(() => {
         houseInfo();
-    });
+    },[]);
 
 
     return (

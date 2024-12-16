@@ -32,7 +32,7 @@ const House = () => {
 
     useEffect(() => {
         houseInfo();
-    });
+    },[]);
 
     const houseComp = () => {
         if (houseData.length !== 0) {

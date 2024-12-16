@@ -2,8 +2,10 @@ import { Box } from '@mui/material';
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import { PieChart } from '@mui/x-charts/PieChart';
+import Skeleton from '@mui/material/Skeleton';
+import Avatar from '@mui/material/Avatar';
 
-function AnaylzeGraph() {
+function AnaylzeGraph(piechartData) { 
     return (
         <Card
             sx={{
@@ -16,14 +18,23 @@ function AnaylzeGraph() {
                 flexDirection: 'column'
             }}
         >
+            {/* {loading?
+                (<Skeleton variant="circular">
+                    <Avatar />
+                </Skeleton>)
+            :(<PieChart
+                series={[
+                    {
+                        data: piechartData
+                    },
+                ]}
+                width='600'
+                height='400'
+            />)} */}
             <PieChart
                 series={[
                     {
-                        data: [
-                            { id: 0, value: 10, label: 'series A' },
-                            { id: 1, value: 15, label: 'series B' },
-                            { id: 2, value: 20, label: 'series C' },
-                        ],
+                        data: piechartData
                     },
                 ]}
                 width='600'

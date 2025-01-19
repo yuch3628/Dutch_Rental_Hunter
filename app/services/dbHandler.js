@@ -36,3 +36,33 @@ export async function getHouseInfoByDate(date) {
     let house = await db.query("SELECT house.*, array_remove(array_agg(houseimage.imgurl), NULL) AS imgurls FROM house LEFT JOIN houseimage ON house.address = houseimage.address WHERE house.posting_date >= ($1) GROUP BY house.id;",[date]);
     return house.rows;
 }
+
+export async function getHouseCountByDate(date) {
+    let num  = await db.query('SELECT COUNT(id) FROM house WHERE house.posting_date = ($1);',[date]);
+    return num.rows[0].count;
+}
+
+export async function getHouseCountByThis30Days() {
+
+    let num  = await db.query('SELECT COUNT(id) FROM house WHERE house.posting_date > now() - interval \'30 day\' AND house.posting_date < now() - interval \'0 day\';');
+
+    return num.rows[0].count;
+}
+
+export async function getHouseCountByPast30Days() {
+
+    let num  = await db.query("SELECT COUNT(id) FROM house WHERE house.posting_date > now() - interval '60 day' AND house.posting_date < now() - interval '30 day';");
+    return num.rows[0].count;
+}
+
+export async function getHouseMedianInAWeek() {
+
+    let price = await db.query("SELECT price FROM house WHERE house.posting_date > now() - interval '7 day';");
+
+    let priceList = []; 
+    for(let i in price.rows){
+        priceList.push(price.rows[i].price);
+    }
+
+    return priceList;
+}

@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import scheduleHouseScraping from "./services/housescraping.js"
-import {db, getHouseInfoByDate} from "./services/dbHandler.js"
+import {db, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
+import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
 
 import dotenv from "dotenv";
+import { log } from "console";
 dotenv.config();
 
 const app = express();
@@ -50,7 +52,7 @@ app.get("/house/date/:id", async (req,res) => {
             prevDate.setMonth(date.getMonth() - 1);
             break;
         case '5':
-            prevDate.setDate(prevDate.getDate() - 20);
+            prevDate.setDate(date.getDate() - 20);
             break;
         case '6':
             prevDate.setDate(date.getDate() - 15);
@@ -72,9 +74,32 @@ app.get("/house/date/:id", async (req,res) => {
 app.get('/dashboard', async(req,res) => {
     const date = new Date();
     let prevDate = new Date(date);
-    prevDate.setMonth(date.getMonth() - 1);
-    let house = await getHouseInfoByDate(prevDate);
 
+    // today's house amount
+    let todayHouseCount = await getHouseCountByDate(prevDate);
+    // this 30 days vs last 30 days
+    let this30Days = await getHouseCountByThis30Days();
+    let past30Days = await getHouseCountByPast30Days();
+    let growth = monthGrowth(this30Days,past30Days);
+    
+    //this week median rent
+    let thisWeekRentList = await getHouseMedianInAWeek();
+    let weekMedianRent = findMedian(thisWeekRentList);  
+    
+    //week trend bar
+    let weekTrendBar = [];
+    let weekTrendDate = new Date(date.getTime());
+    let day = [];
+    let houseWeekItem = [];
+    for(let i = 0; i < 7; i++){
+        weekTrendDate.setTime(date.getTime() - (24 * 3600 * 1000 * i));
+        let houseWeekAmount = await getHouseCountByDate(weekTrendDate);
+        day.push(weekday[weekTrendDate.getDay()]);
+        houseWeekItem.push(parseInt(houseWeekAmount));
+    }
+    weekTrendBar.push({day:day});
+    weekTrendBar.push({houseWeekItem:houseWeekItem});
+    // circlegraph   
     const area = {
         central: 0,
         east: 0,
@@ -87,49 +112,40 @@ app.get('/dashboard', async(req,res) => {
         others:0 
     };
 
+    prevDate.setMonth(date.getMonth() - 1);
+    let house = await getHouseInfoByDate(prevDate);
+
     for (let info of house){
         let code = parseInt(info.postcode.split(' ')[0]);
-        switch (true) {
-            case (code < 1019):
-                area.central +=1;
-                break;
-            case (code <= 1019):
-                area.east +=1;
-                break;
-            case (code >= 1020 && code < 1040):
-                area.north +=1;
-                break;
-            case (code >= 1040 && code < 1050):
-                area.westpoort +=1;
-                break;
-            case (code >= 1050 && code < 1060):
-                area.west +=1;
-                break;
-            case (code >= 1060 && code < 1070):
-                area.newwest +=1;
-                break;
-            case (code >= 1070 && code < 1084):
-                area.south +=1;
-                break;
-            case (code >= 1086 && code < 1100):
-                area.east +=1;
-                break;
-            case (code >= 1100 && code < 1110):
-                area.southeast +=1;
-                break;
-            default:
-                area.others +=1;
-                break;
-        }
+        amsPostCode(area, code);
     }
-
-    let data = [];
+    
+    let circleGraph = [];
     let count = 0;
     for (let a in area){
         let item = {id:count, value:area[a], label:a};
-        data.push(item);
+        circleGraph.push(item);
         count++;
     }
+
+    // month line chart
+    let monthLineChart = [];
+    let monthLineDate = new Date(date.getTime());
+    for(let i = 30; i >= 0 ; i--){
+        monthLineDate.setTime(date.getTime() - (24 * 3600 * 1000 * i));
+        let houseMonthAmount = await getHouseCountByDate(monthLineDate);
+        let houseMonthItems = { days: i, item: parseInt(houseMonthAmount)};
+        monthLineChart.push(houseMonthItems);
+    }
+
+    let data = {
+        TodaysCount : parseInt(todayHouseCount),
+        WeekMedianRent : weekMedianRent + " €",
+        TwoMonthComp : growth,
+        WeekTrendBar : weekTrendBar,
+        CircleGraph : circleGraph,
+        MonthLineChart : monthLineChart
+    };
 
     res.send(data);
 });  

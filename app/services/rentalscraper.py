@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import sys 
 
 url = "https://www.funda.nl/zoeken/huur?selected_area=%5B%22gemeente-amsterdam%22%5D&price=%22-2000%22&publication_date=%223%22&floor_area=%2250-%22"
 

@@ -10,6 +10,7 @@ import { Box } from "@mui/material";
 const History = () => {
     const [houseData, setHouseData] = useState([]);
     let [page, setPage] = useState(1);
+    const [isChosen, setIsChosen] = useState(false);
     const handleChange = (event, value) => {
         setPage(value);
     };
@@ -24,11 +25,12 @@ const History = () => {
             axios.get(`http://localhost:8800/house/date/${id}`).then((res) => {
                 setHouseData(res.data);
             });
+            setIsChosen(true);
         }
     }
     useEffect(() => {
         houseInfo();
-    },[]);
+    }, []);
 
 
     return (
@@ -37,13 +39,13 @@ const History = () => {
             <ComboBox getLabelId={(value) => houseInfo(value.id)} />
             {houseData?.slice(firstIndex, secondIndex).map(data =>
                 <Card data={data} key={data.id}></Card>)}
-            <Box sx={{ m: { xs: 3, sm: 5, md: 5, lg: 5 },
-                    display:"flex",justifyContent:"center"
-                }}>
-                <Pagination count={count} page={page} variant="outlined"
-                    onChange={handleChange} />
+            <Box sx={{
+                m: { xs: 3, sm: 5, md: 5, lg: 5 },
+                display: "flex", justifyContent: "center"
+            }}>
+                {isChosen && <Pagination count={count} page={page} variant="outlined"
+                    onChange={handleChange} />}
             </Box>
-
         </div>
     );
 };

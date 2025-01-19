@@ -1,5 +1,5 @@
 import './App.css';
-
+import {primary,secondary,background} from './style/color.js';
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,13 +13,28 @@ import {
   responsiveFontSizes,
   ThemeProvider,
 } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 
-let theme = createTheme();
+let theme = createTheme({
+  palette: {
+    primary: {
+      main: primary,
+    },
+    secondary: {
+      main: secondary,
+    },
+    background: {
+      default: background,
+    },
+  },
+});
+
 theme = responsiveFontSizes(theme);
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <Router>
         <div className='App'>
           <Routes>

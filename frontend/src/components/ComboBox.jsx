@@ -27,6 +27,7 @@ function ComboBox({ getLabelId }) {
 
             <Stack sx={{ justifyContent: 'center', alignItems: 'center' }} spacing={{ xs: 1, sm: 2, md: 4 }}>
                 <Autocomplete
+                    id="timeperiod"
                     value={value}
                     onChange={(event, newValue) => {
                         setValue(newValue);

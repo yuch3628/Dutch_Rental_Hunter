@@ -1,9 +1,17 @@
-import { Box } from '@mui/material';
 import * as React from 'react';
+import { LineChart } from '@mui/x-charts/LineChart';
 import Card from '@mui/material/Card';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { Box } from '@mui/material';
 
-function AnaylzeGraph(props) {
+function MonthlyChart(props) {
+    // let monthData = props.data.reverse();
+    let day = [];
+    let item = [];
+    props.data.map((dayItem) => {
+        day.push(dayItem.days);
+        item.push(dayItem.item);
+    })
+
     return (
         <Card
             sx={{
@@ -16,21 +24,21 @@ function AnaylzeGraph(props) {
                 width: '100%'
             }}
         >
-            <PieChart
+            <LineChart
+                xAxis={[{ data: day }]}
                 series={[
                     {
-                        data: props.data
+                        data: item,
+                        area: true,
+                        baseline: 'min',
                     },
                 ]}
-                width='600'
-                height='400'
             />
             <Box sx={{ p: 2 }}>
                 <b>This month area distribution</b>
             </Box>
         </Card>
-
     );
-
 }
-export default AnaylzeGraph;
+
+export default MonthlyChart;

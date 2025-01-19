@@ -5,6 +5,7 @@ import NavBar from "../components/NavBar.jsx";
 import Card from "../components/Card.jsx";
 import Pagination from '@mui/material/Pagination';
 import { Box } from "@mui/material";
+import { background } from "../style/color.js";
 
 const House = () => {
     const [houseData, setHouseData] = useState([]);
@@ -14,13 +15,16 @@ const House = () => {
     };
     const cardPerPage = 5;
     const count = Math.ceil(houseData.length / cardPerPage);
+    let hasPagination = true;
+    if (count === 1) {
+        hasPagination = false;
+    }
     let firstIndex = cardPerPage * (page - 1);
     let secondIndex = firstIndex + cardPerPage > (houseData.length - 1) ? houseData.length : firstIndex + cardPerPage;
 
     const houseInfo = () => {
         axios.get('http://localhost:8800/house/today').then((res) => {
             setHouseData(res.data);
-            console.log(res.data);
         })
     }
 
@@ -33,20 +37,20 @@ const House = () => {
 
     useEffect(() => {
         houseInfo();
-    },[]);
+    }, []);
 
     const houseComp = () => {
         if (houseData.length !== 0) {
             return (
-                <div>
+                <Box>
                     {houseData.slice(firstIndex, secondIndex).map(data =>
                         <Card data={data} key={data.id}></Card>)}
-                    <Box sx={{
+                    {hasPagination && <Box sx={{
                         m: { xs: 3, sm: 5, md: 5, lg: 5 },
-                        display: "flex", justifyContent: "center"
-                    }}>
+                        display: "flex", justifyContent: "center"}}>
                         <Pagination count={count} page={page} variant="outlined" onChange={handleChange} /></Box>
-                </div>);
+                    }
+                </Box>);
         } else {
             return (<div style={noInfoStyle}><h1 style={{ margin: '0px', color: '#a7a8aa' }}>House is not avilable today!</h1></div>);
         }

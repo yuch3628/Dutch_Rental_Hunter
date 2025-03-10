@@ -8,11 +8,12 @@ import AnaylzeGraph from "../components/AnaylzeGraph.jsx";
 import WeekTinyChart from "../components/WeekTinyChart.jsx";
 import MonthlyChart from "../components/MonthlyChart.jsx";
 
+
 const Home = () => {
     const [dashboardData, setDashboardData] = useState([]);
 
     const dashboardInfo = () => {
-        axios.get('http://localhost:8800/dashboard')
+        axios.get(`${process.env.REACT_APP_API_URL}/dashboard`)
             .then((res) => {
                 setDashboardData(res.data);
             });

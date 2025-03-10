@@ -23,7 +23,7 @@ const House = () => {
     let secondIndex = firstIndex + cardPerPage > (houseData.length - 1) ? houseData.length : firstIndex + cardPerPage;
 
     const houseInfo = () => {
-        axios.get('http://localhost:8800/house/today').then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/house/today`).then((res) => {
             setHouseData(res.data);
         })
     }
@@ -47,7 +47,8 @@ const House = () => {
                         <Card data={data} key={data.id}></Card>)}
                     {hasPagination && <Box sx={{
                         m: { xs: 3, sm: 5, md: 5, lg: 5 },
-                        display: "flex", justifyContent: "center"}}>
+                        display: "flex", justifyContent: "center"
+                    }}>
                         <Pagination count={count} page={page} variant="outlined" onChange={handleChange} /></Box>
                     }
                 </Box>);

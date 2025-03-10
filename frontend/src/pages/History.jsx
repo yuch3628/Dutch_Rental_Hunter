@@ -7,6 +7,7 @@ import ComboBox from "../components/ComboBox.jsx";
 import Pagination from '@mui/material/Pagination';
 import { Box } from "@mui/material";
 
+
 const History = () => {
     const [houseData, setHouseData] = useState([]);
     let [page, setPage] = useState(1);
@@ -22,7 +23,7 @@ const History = () => {
 
     const houseInfo = (id) => {
         if (id != null) {
-            axios.get(`http://localhost:8800/house/date/${id}`).then((res) => {
+            axios.get(`${process.env.REACT_APP_API_URL}/house/date/${id}`).then((res) => {
                 setHouseData(res.data);
             });
             setIsChosen(true);

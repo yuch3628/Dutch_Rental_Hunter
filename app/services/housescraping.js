@@ -14,8 +14,6 @@ async function scheduleHouseScraping() {
     }
     var existedRent = [];
     var dbError = [];
-
-    // await db.connect();
    
     for(let i in data) {
         let isExisted = await checkHouseExist(data[i].name);

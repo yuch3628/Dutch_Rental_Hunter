@@ -1,12 +1,10 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
 import scheduleHouseScraping from "./services/housescraping.js"
 import {db, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
 import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
 
 import dotenv from "dotenv";
-import { log } from "console";
 dotenv.config();
 
 const app = express();

@@ -1,14 +1,9 @@
-import {PythonShell} from "python-shell";
+import getRentalData from "./rentalscraper.js";
 import {db, createHouseInfo, createHouseImage, checkHouseExist, getExistHouse} from "./dbHandler.js"
 
-
 async function scheduleHouseScraping() {
-    let data;
+    let data = await getRentalData();
 
-    await PythonShell.run('./services/rentalscraper.py', null).then(messages => {
-
-    data = JSON.parse(messages[0])}); 
-    
     if (data.length == null) {
         return {};
     }
@@ -36,17 +31,10 @@ async function scheduleHouseScraping() {
             existedRent.push(existedData);
         }    
     }
-    // await db.end();
-    
-    // if (existedRent.length) {
-    //     console.log('Already have in DB:');
-    //     console.log(existedRent);
-    // } 
 
     if (dbError.length) {
         console.log('Error:');
         console.log(dbError);
     }
 }
-
 export default scheduleHouseScraping;

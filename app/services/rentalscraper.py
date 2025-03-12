@@ -4,10 +4,6 @@ from selenium import webdriver
 
 url = "https://www.funda.nl/zoeken/huur?selected_area=%5B%22gemeente-amsterdam%22%5D&price=%22-2000%22&publication_date=%223%22&floor_area=%2250-%22"
 
-headers = {
-    'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36'
-}
-
 driver = webdriver.Chrome()
 
 driver.implicitly_wait(10)

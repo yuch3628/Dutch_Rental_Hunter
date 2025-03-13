@@ -1,4 +1,4 @@
-export const weekday = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+export const weekday = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
 export function findMedian(arr) {
     arr.sort((a, b) => a - b);  

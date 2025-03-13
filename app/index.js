@@ -3,7 +3,7 @@ import cors from "cors";
 import scheduleHouseScraping from "./services/housescraping.js"
 import {db, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
 import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
-
+import { DateTime } from 'luxon';
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,61 +17,61 @@ app.get("/", (req,res) => {
 });
 
 app.get("/house/today", async (req,res) => {
-    let date = new Date();
+    const date = DateTime.now().setZone('Europe/Amsterdam').toISO().split('T')[0];
+
     let house = await getHouseInfoByDate(date);
     res.send(house);
 });
 
 app.get("/house/yesterday", async (req,res) => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterday = DateTime.now().setZone('Europe/Amsterdam').minus({ days: 1 }).toISO().split('T')[0];
+
     let house = await getHouseInfoByDate(yesterday);
     res.send(house);
 });
 
 app.get("/house/date/:id", async (req,res) => {
     var dateType = req.params.id;
-
-    const date = new Date();
-    let prevDate = new Date(date);
+    const date = DateTime.now().setZone('Europe/Amsterdam');
+    let prevDate = date;
 
     switch (dateType) {
         case '1':
-            prevDate.setMonth(date.getMonth() - 6);
+            prevDate = prevDate.minus({ months: 6 });
             break;
         case '2':
-            prevDate.setMonth(date.getMonth() - 3);
+            prevDate = prevDate.minus({ months: 3 });
             break;
         case '3':
-            prevDate.setMonth(date.getMonth() - 2);
+            prevDate = prevDate.minus({ months: 2 });
             break;
         case '4':
-            prevDate.setMonth(date.getMonth() - 1);
+            prevDate = prevDate.minus({ months: 1 });
             break;
         case '5':
-            prevDate.setDate(date.getDate() - 20);
+            prevDate = prevDate.minus({ days: 20});
             break;
         case '6':
-            prevDate.setDate(date.getDate() - 15);
+            prevDate = prevDate.minus({ days: 15 });
             break;
         case '7':
-            prevDate.setDate(date.getDate() - 10);
+            prevDate = prevDate.minus({ days: 10 });
             break;
         case '8':
-            prevDate.setDate(date.getDate() - 5);
+            prevDate = prevDate.minus({ days: 5 });
             break;
         default:
-            prevDate = date;
-    }
-
+            console.warn('Invalid dateType:', dateType);
+    }    
+    prevDate = prevDate.toISO().split('T')[0];
     let house = await getHouseInfoByDate(prevDate);
     res.send(house);
 });
 
 app.get('/dashboard', async(req,res) => {
-    const date = new Date();
-    let prevDate = new Date(date);
+    // const date = new Date();
+    const date = DateTime.now().setZone('Europe/Amsterdam');
+    let prevDate = date.toISO().split('T')[0];
 
     // today's house amount
     let todayHouseCount = await getHouseCountByDate(prevDate);
@@ -86,13 +86,18 @@ app.get('/dashboard', async(req,res) => {
     
     //week trend bar
     let weekTrendBar = [];
-    let weekTrendDate = new Date(date.getTime());
+    let weekTrendDate;
+
     let day = [];
     let houseWeekItem = [];
-    for(let i = 0; i < 7; i++){
-        weekTrendDate.setTime(date.getTime() - (24 * 3600 * 1000 * i));
+    for(let i = 1; i < 8; i++){
+        weekTrendDate = date.minus({days: `${i}`});
+        let weekdayNum = weekTrendDate.weekday;
+        
+        weekTrendDate = weekTrendDate.toISO().split('T')[0];
         let houseWeekAmount = await getHouseCountByDate(weekTrendDate);
-        day.push(weekday[weekTrendDate.getDay()]);
+        
+        day.push(weekday[weekdayNum-1]);
         houseWeekItem.push(parseInt(houseWeekAmount));
     }
     weekTrendBar.push({day:day});
@@ -109,9 +114,9 @@ app.get('/dashboard', async(req,res) => {
         southeast: 0,
         others:0 
     };
+    let lastMonth = date.minus({month:1}).toISO().split('T')[0];
 
-    prevDate.setMonth(date.getMonth() - 1);
-    let house = await getHouseInfoByDate(prevDate);
+    let house = await getHouseInfoByDate(lastMonth);
 
     for (let info of house){
         let code = parseInt(info.postcode.split(' ')[0]);
@@ -128,10 +133,12 @@ app.get('/dashboard', async(req,res) => {
 
     // month line chart
     let monthLineChart = [];
-    let monthLineDate = new Date(date.getTime());
+    const monthLineDate = date;
+
     for(let i = 30; i >= 0 ; i--){
-        monthLineDate.setTime(date.getTime() - (24 * 3600 * 1000 * i));
-        let houseMonthAmount = await getHouseCountByDate(monthLineDate);
+
+        let newMonthLineDate = monthLineDate.minus({day:`${i}`}).toISO().split('T')[0];
+        let houseMonthAmount = await getHouseCountByDate(newMonthLineDate);
         let houseMonthItems = { days: i, item: parseInt(houseMonthAmount)};
         monthLineChart.push(houseMonthItems);
     }

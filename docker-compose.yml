@@ -8,14 +8,10 @@ services:
         ports:
             - "8800:8800"
         environment:
-            POSTGRES_HOST: host.docker.internal
-            POSTGRES_USERNAME: "${POSTGRES_USERNAME}"
-            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-            POSTGRES_DATABASE: "${POSTGRES_DATABASE}"
-            POSTGRES_PORT: "${POSTGRES_PORT}"
+            DATABASE_URL: "${DATABASE_URL}"
             PORT: "${BACKEND_PORT}"
         env_file:
-            - .env
+            - .env.render
         networks:
             - rental-network
     frontend:
@@ -33,7 +29,7 @@ services:
             REACT_APP_API_URL: "${REACT_APP_API_URL}"
             PORT: "${FRONTEND_PORT}"
         env_file:
-            - .env
+            - .env.render
         networks:
             - rental-network
 networks:

@@ -25,8 +25,8 @@ const Home = () => {
     const dashboardComp = () => {
         if (dashboardData.length !== 0) {
             let growth = dashboardData.TwoMonthComp;
-            let monthCompImg = (growth[0] == "-") ? "./decrease.png" : "./increase.png";
-            growth = (growth[0] == "-") ? growth.substring(1) : growth;
+            let monthCompImg = (growth[0] === "-") ? "./decrease.png" : "./increase.png";
+            growth = (growth[0] === "-") ? growth.substring(1) : growth;
             return (
                 <Grid container spacing={2} sx={{ flexBasis: '25%', alignItems: 'center', my: 3, px: 6 }} >
                     <Grid item size={{ xs: 12, sm: 6, lg: 3 }}>

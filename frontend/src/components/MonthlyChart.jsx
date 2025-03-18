@@ -4,7 +4,6 @@ import Card from '@mui/material/Card';
 import { Box } from '@mui/material';
 
 function MonthlyChart(props) {
-    // let monthData = props.data.reverse();
     let day = [];
     let item = [];
     props.data.map((dayItem) => {

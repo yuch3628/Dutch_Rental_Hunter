@@ -2,6 +2,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import pg from "pg";
 
+const MAX_RETRIES = 5;
+const RETRY_DELAY = 2000; // 2 seconds
+
 export const db = new pg.Pool({
     user: process.env.POSTGRES_USERNAME,
     host: process.env.POSTGRES_HOST,
@@ -13,13 +16,31 @@ export const db = new pg.Pool({
     connectionTimeoutMillis: 2000,
 });
 
+export async function connectWithRetry(retries = MAX_RETRIES) {
+    while (retries > 0) {
+      try {
+        await db.query('SELECT 1');
+        console.log('Connected to PostgreSQL!');
+        return;
+      } catch (error) {
+        retries -= 1;
+        console.error(`Connection failed. Retries left: ${retries}`, error.message);
+        if (retries === 0) {
+          console.error('All connection retries failed.');
+          process.exit(1);
+        }
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+      }
+    }
+}
+
 export async function checkHouseExist(house) {
     let isExisted = await db.query("SELECT EXISTS(SELECT 1 FROM house WHERE address = $1);", [house]);
     return isExisted.rows[0].exists;
 }
 
 export async function createHouseInfo(houseData) {
-    return await db.query("INSERT INTO house(address, city, region, postcode, price, url) VALUES ($1, $2, $3, $4, $5, $6);", [houseData.name, houseData.city, houseData.region, houseData.postcode, houseData.price, houseData.url]);
+    return await db.query("INSERT INTO house(address, city, region, postcode, price, url, posting_date) VALUES ($1, $2, $3, $4, $5, $6, $7);", [houseData.name, houseData.city, houseData.region, houseData.postcode, houseData.price, houseData.url, houseData.date]);
 }
 
 export async function createHouseImage(imgName, imgUrl) {

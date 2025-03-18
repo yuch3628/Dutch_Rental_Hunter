@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import scheduleHouseScraping from "./services/housescraping.js"
-import {db, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
+import {db, connectWithRetry, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
 import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
 import { DateTime } from 'luxon';
 import dotenv from "dotenv";
@@ -10,6 +10,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
+await connectWithRetry();
 await scheduleHouseScraping();
 
 app.get("/", (req,res) => { 

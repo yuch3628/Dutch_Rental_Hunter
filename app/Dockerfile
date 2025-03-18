@@ -1,17 +1,25 @@
 # Use a lighter version of Node as a parent image
-FROM node:alpine
+FROM node:23.9.0-alpine
+
+# Install necessary packages and Chromium
+RUN apk add --no-cache bash chromium nss freetype harfbuzz ttf-freefont xvfb libx11 libxcomposite libxrandr libxi libxtst ca-certificates ffmpeg
+
+# Set Puppeteer to use Chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV DISPLAY=:99
+
 # Set the working directory to /app
 WORKDIR /app
-# copy package.json into the container at /app
-COPY package*.json /app/
-# Copy the current directory contents into the container at /app
-COPY . /app/
-# install dependencies
+
+# Copy package.json and install dependencies first (optimize Docker cache)
+COPY package*.json ./
 RUN npm install
 
-# RUN apk add --update && apk install -y python3.7.6 python3.7.6-dev 
-# RUN apk install python3-pip -y
-# Make port 8800 available to the world outside this container
+# Copy the rest of the app’s code into the container
+COPY . .
+
+# Expose port 8800
 EXPOSE 8800
-# Run the app when the container launches
-CMD ["npm", "start"]
+
+# Run Xvfb and start the app
+CMD [ "sh", "-c", "rm -f /tmp/.X99-lock && Xvfb :99 -screen 0 1280x1024x24 & npm start" ]

@@ -5,7 +5,14 @@ import pg from "pg";
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 2000; // 2 seconds
 
-export const db = new pg.Pool({
+export const db = new pg.Pool(
+    process.env.DATABASE_URL ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }, // Required for Render's managed Postgres
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
+    }:{
     user: process.env.POSTGRES_USERNAME,
     host: process.env.POSTGRES_HOST,
     database: process.env.POSTGRES_DATABASE,

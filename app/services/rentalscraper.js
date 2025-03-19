@@ -16,8 +16,7 @@ async function getRentalData() {
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36');
     let houseUrls = [];
     try {
-        await page.goto('https://www.funda.nl/zoeken/huur?selected_area=%5B%22gemeente-amsterdam%22%5D&price=%22-2000%22&publication_date=%223%22&floor_area=%2250-%22', { waitUntil: "networkidle2"});
-                
+        await page.goto('https://www.funda.nl/zoeken/huur?selected_area=%5B%22gemeente-amsterdam%22%5D&price=%22-2000%22&publication_date=%223%22&floor_area=%2250-%22', {  timeout: 60000, waitUntil: "networkidle2"});
         const jsonData = await page.evaluate(() => {
             const jsonScript = document.querySelector('script[type="application/ld+json"]');
             return jsonScript ? JSON.parse(jsonScript.innerText) : null;
@@ -28,7 +27,7 @@ async function getRentalData() {
             houseUrls.push(item['url']);
         }
     } catch(err) {
-        console.log('Web page has error!');
+        console.log('Web page has error!\n',err);
     }
     
 
@@ -38,15 +37,19 @@ async function getRentalData() {
         const client = await page.createCDPSession();
         const cookiesBefore = await client.send('Network.getAllCookies');
         await client.send('Network.clearBrowserCookies');
-        
+        var houseDetail = [];
         let url = houseUrls[i];
-        await page.goto(`${url}`);
-        await page.waitForSelector('script[type="application/ld+json"]');
+        try {
+            await page.goto(url, { timeout: 60000});
+            await page.waitForSelector('script[type="application/ld+json"]');
         
-        const houseDetail = await page.evaluate(() => {
-            const jsonScript = document.querySelector('script[type="application/ld+json"]');
-            return jsonScript ? JSON.parse(jsonScript.innerText) : null;
-        });
+            houseDetail = await page.evaluate(() => {
+                const jsonScript = document.querySelector('script[type="application/ld+json"]');
+                return jsonScript ? JSON.parse(jsonScript.innerText) : null;
+            });
+        } catch (error) {
+            console.error('Navigation failed:', error);
+        }
 
         // house post code
         let front = houseDetail['description'].indexOf(houseDetail['name'])+houseDetail['name'].length +1;

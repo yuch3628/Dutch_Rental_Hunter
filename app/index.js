@@ -5,13 +5,15 @@ import {db, connectWithRetry, getHouseInfoByDate, getHouseCountByDate, getHouseC
 import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
 import { DateTime } from 'luxon';
 import dotenv from "dotenv";
+import nodeCron from "node-cron";
+
 dotenv.config();
 
 const app = express();
 app.use(cors());
 
 await connectWithRetry();
-await scheduleHouseScraping();
+const scrapperJob = nodeCron.schedule(`${process.env.SCHEDULED_SCRAPER}`,scheduleHouseScraping);
 
 app.get("/", (req,res) => { 
     res.send("successfully to connect!");

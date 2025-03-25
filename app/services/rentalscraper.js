@@ -29,6 +29,7 @@ async function getRentalData() {
         }
     } catch(err) {
         console.log('Web page has error!');
+        console.log("err: "+err);
     }
     
 

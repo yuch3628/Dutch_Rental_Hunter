@@ -14,7 +14,7 @@ export const db = new pg.Pool(
     port: process.env.POSTGRES_PORT,
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 5000,
 });
 
 export async function connectWithRetry(retries = MAX_RETRIES) {

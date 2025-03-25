@@ -19,7 +19,7 @@ RUN npm install
 COPY . .
 
 # Expose port 8800
-EXPOSE 8800
+EXPOSE 8080
 
 # Run Xvfb and start the app
 CMD [ "sh", "-c", "rm -f /tmp/.X99-lock && Xvfb :99 -screen 0 1280x1024x24 & npm start" ]

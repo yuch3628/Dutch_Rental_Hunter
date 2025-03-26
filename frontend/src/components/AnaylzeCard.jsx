@@ -3,6 +3,7 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 
 function AnaylzeCard(props) {
+    const addUnit = props.title === "Rental Market Shift" ? '(This vs. Last 30 Days)': '';
     return (
         <Card
             sx={{
@@ -28,6 +29,7 @@ function AnaylzeCard(props) {
                 <Box sx={{ flexGrow: 1 }}>
                     <Box sx={{ my: 1, typography: 'subtitle2' }}>{props.title}</Box>
                     <Box sx={{ typography: 'h4' }}>{props.count}</Box>
+                    <Box sx={{ typography: 'body2' }}>{addUnit}</Box>
                 </Box>
             </Box>
         </Card>

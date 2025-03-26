@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import scheduleHouseScraping from "./services/housescraping.js"
-import {db, connectWithRetry, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
+import {db, connectWithRetry, keepDbAlive, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
 import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
 import { DateTime } from 'luxon';
 import dotenv from "dotenv";
@@ -14,6 +14,7 @@ app.use(cors());
 
 await connectWithRetry();
 const scrapperJob = nodeCron.schedule(`${process.env.SCHEDULED_SCRAPER}`,scheduleHouseScraping);
+cron.schedule(`${process.env.SCHEDULED_DATABASE}`, keepDbAlive);
 
 app.get("/", (req,res) => { 
     res.send("successfully to connect!");

@@ -31,6 +31,15 @@ export async function connectWithRetry(retries = MAX_RETRIES) {
     }
 }
 
+export async function keepDbAlive() {
+    try {
+        await db.query('SELECT 1'); 
+        console.log('Connection is alive');
+      } catch (err) {
+        console.error('Error keeping connection alive:', err);
+      }
+}
+
 export async function checkHouseExist(house) {
     let isExisted = await db.query("SELECT EXISTS(SELECT 1 FROM house WHERE address = $1);", [house]);
     return isExisted.rows[0].exists;

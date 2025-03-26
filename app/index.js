@@ -13,8 +13,8 @@ const app = express();
 app.use(cors());
 
 await connectWithRetry();
-const scrapperJob = nodeCron.schedule(`${process.env.SCHEDULED_SCRAPER}`,scheduleHouseScraping);
-cron.schedule(`${process.env.SCHEDULED_DATABASE}`, keepDbAlive);
+nodeCron.schedule(`${process.env.SCHEDULED_SCRAPER}`,scheduleHouseScraping);
+nodeCron.schedule(`${process.env.SCHEDULED_DATABASE}`, keepDbAlive);
 
 app.get("/", (req,res) => { 
     res.send("successfully to connect!");

@@ -9,8 +9,8 @@ export const db = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }, // Required for Render's managed Postgres
     max: 20,
-    idleTimeoutMillis: 1200000,
-    connectionTimeoutMillis: 2000,
+    idleTimeoutMillis: 900000,
+    connectionTimeoutMillis: 5000,
 });
 
 export async function connectWithRetry(retries = MAX_RETRIES) {

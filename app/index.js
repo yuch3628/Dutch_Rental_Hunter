@@ -158,6 +158,9 @@ app.get('/dashboard', async(req,res) => {
     res.send(data);
 });  
 
+app.get('/health', (req, res) => {
+    res.status(200).send('Backend is healthy');
+});
 
 const PORT = process.env.PORT || 8800;
 

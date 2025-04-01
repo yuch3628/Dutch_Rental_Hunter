@@ -5,7 +5,6 @@ import NavBar from "../components/NavBar.jsx";
 import Card from "../components/Card.jsx";
 import Pagination from '@mui/material/Pagination';
 import { Box } from "@mui/material";
-import { background } from "../style/color.js";
 
 const House = () => {
     const [houseData, setHouseData] = useState([]);

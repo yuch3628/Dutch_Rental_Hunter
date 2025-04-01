@@ -26,7 +26,7 @@ function AnaylzeGraph(props) {
                 height='400'
             />
             <Box sx={{ p: 2 }}>
-                <b>Apartments by Area</b>
+                <b>Amsterdam Apartment Distribution by Region</b>
             </Box>
         </Card>
 

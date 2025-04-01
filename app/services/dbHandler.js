@@ -93,3 +93,22 @@ export async function getHouseMedianInAWeek() {
 
     return priceList;
 }
+
+export async function getPast6MonthsRentalAmount() {
+    let ans = await db.query(`
+    WITH months AS (
+    SELECT generate_series(
+        DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '6 months',
+        DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '1 month',
+        INTERVAL '1 month'
+        ) AS month
+    )
+    SELECT TO_CHAR(m.month, 'MM') AS month, COALESCE(COUNT(h.posting_date), 0) AS listed
+    
+    FROM months m
+    LEFT JOIN house h 
+        ON DATE_TRUNC('month', h.posting_date) = m.month
+    GROUP BY m.month
+    ORDER BY m.month;`);
+    return ans.rows;
+}

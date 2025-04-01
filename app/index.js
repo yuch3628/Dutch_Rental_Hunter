@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import scheduleHouseScraping from "./services/housescraping.js"
-import {db, connectWithRetry, keepDbAlive, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek} from "./services/dbHandler.js"
-import {findMedian, amsPostCode, weekday, monthGrowth} from "./rule.js";
+import {db, connectWithRetry, keepDbAlive, getHouseInfoByDate, getHouseCountByDate, getHouseCountByThis30Days, getHouseCountByPast30Days, getHouseMedianInAWeek, getPast6MonthsRentalAmount} from "./services/dbHandler.js"
+import {findMedian, amsPostCode, weekday, monthGrowth, month} from "./rule.js";
 import { DateTime } from 'luxon';
 import dotenv from "dotenv";
 import nodeCron from "node-cron";
@@ -13,8 +13,9 @@ const app = express();
 app.use(cors());
 
 await connectWithRetry();
-nodeCron.schedule(`${process.env.SCHEDULED_SCRAPER}`,scheduleHouseScraping);
-nodeCron.schedule(`${process.env.SCHEDULED_DATABASE}`, keepDbAlive);
+nodeCron.schedule(process.env.SCHEDULED_SCRAPER,scheduleHouseScraping);
+nodeCron.schedule(process.env.SCHEDULED_DATABASE, keepDbAlive);
+
 
 app.get("/", (req,res) => { 
     res.send("successfully to connect!");
@@ -146,6 +147,12 @@ app.get('/dashboard', async(req,res) => {
         let houseMonthItems = { days: i, item: parseInt(houseMonthAmount)};
         monthLineChart.push(houseMonthItems);
     }
+    let MonthBarChart = await getPast6MonthsRentalAmount();
+    for (let item in MonthBarChart ) {
+        let curr = MonthBarChart[item].month;
+        MonthBarChart[item].month = month[curr-1];
+        MonthBarChart[item].listed = parseInt(MonthBarChart[item].listed);
+    }
 
     let data = {
         TodaysCount : parseInt(todayHouseCount),
@@ -153,7 +160,7 @@ app.get('/dashboard', async(req,res) => {
         TwoMonthComp : growth,
         WeekTrendBar : weekTrendBar,
         CircleGraph : circleGraph,
-        MonthLineChart : monthLineChart
+        MonthBarChart : MonthBarChart
     };
 
     res.send(data);

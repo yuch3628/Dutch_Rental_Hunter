@@ -1,5 +1,7 @@
 export const weekday = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 
+export const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
 export function findMedian(arr) {
     arr.sort((a, b) => a - b);  
     const middleIndex = Math.floor(arr.length / 2);  

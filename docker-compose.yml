@@ -10,6 +10,8 @@ services:
         environment:
             DATABASE_URL: "${DATABASE_URL}"
             PORT: "${BACKEND_PORT}"
+            SCHEDULED_SCRAPER: "${SCHEDULED_SCRAPER}"
+            SCHEDULED_DATABASE: "${SCHEDULED_DATABASE}"
         env_file:
             - .env.render
         networks:

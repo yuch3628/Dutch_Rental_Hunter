@@ -14,6 +14,8 @@ services:
             POSTGRES_DATABASE: "${POSTGRES_DATABASE}"
             POSTGRES_PORT: "${POSTGRES_PORT}"
             PORT: "${BACKEND_PORT}"
+            SCHEDULED_SCRAPER: "${SCHEDULED_SCRAPER}"
+            SCHEDULED_DATABASE: "${SCHEDULED_DATABASE}"
         env_file:
             - .env
         networks:

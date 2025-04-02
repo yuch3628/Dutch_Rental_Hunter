@@ -18,7 +18,7 @@ RUN npm install
 # Copy the rest of the app’s code into the container
 COPY . .
 
-# Expose port 8800
+# Expose port 8080
 EXPOSE 8080
 
 # Run Xvfb and start the app

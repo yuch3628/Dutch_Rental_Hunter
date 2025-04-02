@@ -12,6 +12,8 @@ const House = () => {
     const handleChange = (event, value) => {
         setPage(value);
     };
+
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8801";
     const cardPerPage = 5;
     const count = Math.ceil(houseData.length / cardPerPage);
     let hasPagination = true;
@@ -22,7 +24,7 @@ const House = () => {
     let secondIndex = firstIndex + cardPerPage > (houseData.length - 1) ? houseData.length : firstIndex + cardPerPage;
 
     const houseInfo = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/house/today`).then((res) => {
+        axios.get(`${API_URL}/house/today`).then((res) => {
             setHouseData(res.data);
         })
     }
@@ -36,7 +38,7 @@ const House = () => {
 
     useEffect(() => {
         houseInfo();
-    }, []);
+    }, [houseInfo]);
 
     const houseComp = () => {
         if (houseData.length !== 0) {

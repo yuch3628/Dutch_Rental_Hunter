@@ -6,17 +6,21 @@ import Grid from '@mui/material/Grid2';
 import AnaylzeCard from "../components/AnaylzeCard.jsx";
 import AnaylzeGraph from "../components/AnaylzeGraph.jsx";
 import WeekTinyChart from "../components/WeekTinyChart.jsx";
-import MonthlyChart from "../components/MonthlyChart.jsx";
+import MonthBarChart from "../components/MonthBarChart.jsx";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from "@mui/material";
+
 
 const Home = () => {
     const [dashboardData, setDashboardData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8801";
+    console.log(`REACT_APP_API_URL:${process.env.REACT_APP_API_URL}`);
+    console.log('API_URL:'+API_URL);
     const dashboardInfo = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/dashboard`)
+        axios.get(`${API_URL}/dashboard`)
             .then((res) => {
                 setDashboardData(res.data);
                 setLoading(false);
@@ -61,7 +65,7 @@ const Home = () => {
                     <AnaylzeGraph data={dashboardData.CircleGraph} />
                 </Grid>
                 <Grid item size={{ xs: 12, lg: 6 }}>
-                    <MonthlyChart data={dashboardData.MonthLineChart} />
+                    <MonthBarChart data={dashboardData.MonthBarChart} />
                 </Grid>
             </Grid>);
     }

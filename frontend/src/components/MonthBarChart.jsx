@@ -11,7 +11,8 @@ const chartSetting = {
       label: 'Number of Apartments',
     },
   ],
-  series: [{ dataKey: 'listed', label: 'Apartments Listed' }],
+  series: [{ dataKey: 'listed', label: 'Apartments Listed', color: '#3d85c6'}],
+
   height: 300,
   sx: {
     [`& .${axisClasses.directionY} .${axisClasses.label}`]: {

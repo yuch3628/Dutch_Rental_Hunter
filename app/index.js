@@ -13,7 +13,15 @@ const app = express();
 app.use(cors());
 
 await connectWithRetry();
-nodeCron.schedule(process.env.SCHEDULED_SCRAPER,scheduleHouseScraping);
+nodeCron.schedule(process.env.SCHEDULED_SCRAPER, async() => {
+    console.log("🕒 Scheduled scraping triggered");
+    try {
+        await scheduleHouseScraping();
+        console.log("✅ Scraping finished");
+      } catch (err) {
+        console.error("❌ Error in scraping:", err);
+    }
+});
 nodeCron.schedule(process.env.SCHEDULED_DATABASE, keepDbAlive);
 
 

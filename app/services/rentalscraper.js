@@ -23,9 +23,12 @@ async function getRentalData() {
         });
 
         let item;
-        for (item of jsonData['itemListElement']) {
+        if (jsonData !== null) {
+            for (item of jsonData['itemListElement']) {
             houseUrls.push(item['url']);
+            }
         }
+        
     } catch(err) {
         console.log('Web page has error!\n',err);
     }

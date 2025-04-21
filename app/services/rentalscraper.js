@@ -17,16 +17,20 @@ async function getRentalData() {
     let houseUrls = [];
     try {
         await page.goto('https://www.funda.nl/zoeken/huur?selected_area=%5B%22gemeente-amsterdam%22%5D&price=%22-2000%22&publication_date=%223%22&floor_area=%2250-%22', { waitUntil: "networkidle2"});
-                
+          
         const jsonData = await page.evaluate(() => {
             const jsonScript = document.querySelector('script[type="application/ld+json"]');
             return jsonScript ? JSON.parse(jsonScript.innerText) : null;
         });
 
         let item;
-        for (item of jsonData['itemListElement']) {
+        if (jsonData !== null) {
+            console.log('28');  
+            for (item of jsonData['itemListElement']) {
             houseUrls.push(item['url']);
+            }
         }
+        
     } catch(err) {
         console.log('Web page has error!');
         console.log("err: "+err);

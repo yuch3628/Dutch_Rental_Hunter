@@ -13,7 +13,9 @@ const app = express();
 app.use(cors());
 
 await connectWithRetry();
-nodeCron.schedule(process.env.SCHEDULED_SCRAPER,scheduleHouseScraping);
+nodeCron.schedule(process.env.SCHEDULED_SCRAPER, async() => {
+    await scheduleHouseScraping();
+});
 nodeCron.schedule(process.env.SCHEDULED_DATABASE, keepDbAlive);
 
 

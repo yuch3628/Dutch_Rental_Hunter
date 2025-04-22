@@ -25,7 +25,6 @@ async function getRentalData() {
 
         let item;
         if (jsonData !== null) {
-            console.log('28');  
             for (item of jsonData['itemListElement']) {
             houseUrls.push(item['url']);
             }
@@ -81,7 +80,7 @@ async function getRentalData() {
 
         house.push({"name": houseDetail['name'], "city" : houseDetail['address']['addressLocality'], "region" : houseDetail['address']['addressRegion'], "postcode" : postCode, "price" : houseprice, "imgUrl" : img, "url" : houseUrl , "date":date})
     }
-
+    
     await browser.close();
     return house;
 }
